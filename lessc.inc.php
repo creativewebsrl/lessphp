@@ -71,6 +71,9 @@ class lessc {
 			if ($this->fileExists($file = $full.'.less') || $this->fileExists($file = $full)) {
 				return $file;
 			}
+            if ($this->urlExists($url)) {
+                return $url;
+            }
 		}
 
 		return null;
@@ -79,6 +82,10 @@ class lessc {
 	protected function fileExists($name) {
 		return is_file($name);
 	}
+
+    protected function urlExists($url) {
+        return @file_get_contents($url) != '';
+    }
 
 	static public function compressList($items, $delim) {
 		if (!isset($items[1]) && isset($items[0])) return $items[0];
@@ -1772,7 +1779,7 @@ class lessc {
 	}
 
 	protected function addParsedFile($file) {
-		$this->allParsedFiles[realpath($file)] = filemtime($file);
+		$this->allParsedFiles[realpath($file)] = is_file($file) ? filemtime($file) : 0;
 	}
 
 	/**
